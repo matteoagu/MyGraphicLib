@@ -1,5 +1,10 @@
 #include "Workspace.h"
 
+void Workspace::initVariables()
+{
+	pushing_slider = false;
+}
+
 void Workspace::initWindow()
 {
 	window = new sf::RenderWindow(sf::VideoMode(1000, 700), "My Workspace", sf::Style::Close | sf::Style::Titlebar);
@@ -17,19 +22,28 @@ void Workspace::initFont()
 
 void Workspace::initButtons()
 {
-	buttons["TEST"] = new agu::Button({200.f, 300.f}, test_font, "Test me!", 100,
+	/*buttons["TEST"] = new agu::Button({200.f, 300.f}, test_font, "Test me!", 100,
 		sf::Color(100, 100, 100), sf::Color(150, 150, 150), sf::Color(200, 200, 200),
 		sf::Color::White, sf::Color::Yellow, sf::Color::Red,
-		10.f, sf::Color::Magenta, sf::Color::Green, sf::Color::Blue);
+		10.f, sf::Color::Magenta, sf::Color::Green, sf::Color::Blue);*/
+}
+
+void Workspace::initSliders()
+{
+	/*sliders["TEST"] = new agu::Slider({ 300.f, 200.f }, test_font, "Test Slider", 50,
+		sf::Color::White, sf::Color::Yellow, sf::Color::Red, sf::Color(200, 200, 200),
+		3.f, sf::Color::Black, sf::Color::White);*/
 }
 
 Workspace::Workspace()
 {
+	initVariables();
 	initWindow();
 	initFont();
 
 	// Initialize the custom objects
 	initButtons();
+	initSliders();
 }
 
 Workspace::~Workspace()
@@ -38,6 +52,7 @@ Workspace::~Workspace()
 
 	// Delete custom objects
 	for (auto const& it : buttons) { delete it.second; }
+	for (auto const& it : sliders) { delete it.second; }
 }
 
 void Workspace::updatePollEvents()
@@ -47,6 +62,13 @@ void Workspace::updatePollEvents()
 		// CLOSE
 		if (ev.type == sf::Event::Closed) { window->close(); }
 		else if (ev.type == sf::Event::KeyPressed && ev.key.code == sf::Keyboard::Key::Escape) { window->close(); }
+
+		// KEYBOARD
+		else if (ev.type == sf::Event::KeyPressed && ev.key.code == sf::Keyboard::Key::Space && keyboard_clock.getElapsedTime().asSeconds() > 0.2f)
+		{
+			sliders["TEST"]->switchShowValue();
+			keyboard_clock.restart();
+		}
 	}
 }
 
@@ -61,8 +83,26 @@ void Workspace::update()
 	updatePollEvents();
 	updateMousePos();
 
-	// Update custom objects
-	for (auto const& it : buttons) { it.second->update(mouse_pos_view); }
+	// Update custom objects and make sure that only one is pushed
+	bool pushed = false;
+	if (!pushed && !pushing_slider)
+	{
+		for (auto const& it : buttons) 
+		{ 
+			it.second->update(mouse_pos_view);
+			if (it.second->getStatus() == ACTIVE) { pushed = true; break; }
+		}
+	}
+
+	if (!pushed)
+	{
+		for (auto const& it : sliders) 
+		{ 
+			it.second->update(mouse_pos_view); 
+			if (it.second->getStatus() == sACTIVE) { pushed = true; pushing_slider = true; break; }
+			else { pushing_slider = false; }
+		}
+	}
 }
 
 void Workspace::render()
@@ -71,6 +111,7 @@ void Workspace::render()
 
 	// Render custom objects
 	for (auto const& it : buttons) { it.second->render(window); }
+	for (auto const& it : sliders) { it.second->render(window); }
 
 	window->display();
 }

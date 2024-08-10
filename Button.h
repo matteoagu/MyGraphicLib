@@ -8,6 +8,7 @@
 #include <string>
 
 enum ButtonStates { IDLE, HOOVER, ACTIVE };
+static sf::Clock mouseClock;
 
 namespace agu
 {
@@ -54,6 +55,8 @@ namespace agu
 
 		// Get functions
 		short unsigned const getStatus() const;
+
+		bool checkIfAlreadyActive();
 
 		// Update functions
 		void updateStatus(sf::Vector2f& mouse_pos_view);

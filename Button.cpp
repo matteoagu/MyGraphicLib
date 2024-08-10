@@ -68,37 +68,51 @@ short unsigned const agu::Button::getStatus() const
 	return status;
 }
 
+bool agu::Button::checkIfAlreadyActive()
+{
+	return (status == ButtonStates::ACTIVE && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+}
+
 void agu::Button::updateStatus(sf::Vector2f& mouse_pos_view)
 {
-	sf::FloatRect button_bounds = rect.getGlobalBounds();
-
-	if (mouse_pos_view.x > button_bounds.left && mouse_pos_view.x<button_bounds.left + button_bounds.width &&
-		mouse_pos_view.y>button_bounds.top && mouse_pos_view.y < button_bounds.top + button_bounds.height)
+	if (checkIfAlreadyActive()) { status = ButtonStates::ACTIVE; }
+	else
 	{
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) { status = ACTIVE; }
-		else { status = HOOVER; }
-	}
+		sf::FloatRect button_bounds = rect.getGlobalBounds();
 
-	else { status = IDLE; }
+		if (mouse_pos_view.x > button_bounds.left && mouse_pos_view.x<button_bounds.left + button_bounds.width &&
+			mouse_pos_view.y>button_bounds.top && mouse_pos_view.y < button_bounds.top + button_bounds.height)
+		{
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && mouseClock.getElapsedTime().asSeconds() > 0.2f)
+			{
+				status = ButtonStates::ACTIVE;
+				mouseClock.restart();
+			}
+
+			else { status = ButtonStates::HOOVER; }
+		}
+
+		else { status = ButtonStates::IDLE; }
+	}
 }
 
 void agu::Button::updateColors()
 {
 	switch (status)
 	{
-	case IDLE:
+	case ButtonStates::IDLE:
 		rect.setFillColor(idle_color);
 		text.setFillColor(text_idle_color);
 		text.setOutlineColor(text_outline_idle_color);
 		break;
 
-	case HOOVER:
+	case ButtonStates::HOOVER:
 		rect.setFillColor(hoover_color);
 		text.setFillColor(text_hoover_color);
 		text.setOutlineColor(text_outline_hoover_color);
 		break;
 
-	case ACTIVE:
+	case ButtonStates::ACTIVE:
 		rect.setFillColor(active_color);
 		text.setFillColor(text_active_color);
 		text.setOutlineColor(text_outline_active_color);
