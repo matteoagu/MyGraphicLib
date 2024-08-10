@@ -83,10 +83,10 @@ void agu::Button::updateStatus(sf::Vector2f& mouse_pos_view)
 		if (mouse_pos_view.x > button_bounds.left && mouse_pos_view.x<button_bounds.left + button_bounds.width &&
 			mouse_pos_view.y>button_bounds.top && mouse_pos_view.y < button_bounds.top + button_bounds.height)
 		{
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && mouseClock.getElapsedTime().asSeconds() > 0.2f)
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && ButtonMouseClock.getElapsedTime().asSeconds() > 0.2f)
 			{
 				status = ButtonStates::ACTIVE;
-				mouseClock.restart();
+				ButtonMouseClock.restart();
 			}
 
 			else { status = ButtonStates::HOOVER; }

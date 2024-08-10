@@ -3,6 +3,7 @@
 void Workspace::initVariables()
 {
 	pushing_slider = false;
+	pushing_switchbutton = false;
 }
 
 void Workspace::initWindow()
@@ -22,17 +23,22 @@ void Workspace::initFont()
 
 void Workspace::initButtons()
 {
-	/*buttons["TEST"] = new agu::Button({200.f, 300.f}, test_font, "Test me!", 100,
+	buttons["TEST"] = new agu::Button({200.f, 300.f}, test_font, "Test me!", 100,
 		sf::Color(100, 100, 100), sf::Color(150, 150, 150), sf::Color(200, 200, 200),
 		sf::Color::White, sf::Color::Yellow, sf::Color::Red,
-		10.f, sf::Color::Magenta, sf::Color::Green, sf::Color::Blue);*/
+		10.f, sf::Color::Magenta, sf::Color::Green, sf::Color::Blue);
+}
+
+void Workspace::initSwitchButtons()
+{
+	switchButtons["TEST"] = new agu::SwitchButton();
 }
 
 void Workspace::initSliders()
 {
-	/*sliders["TEST"] = new agu::Slider({ 300.f, 200.f }, test_font, "Test Slider", 50,
+	sliders["TEST"] = new agu::Slider({ 300.f, 200.f }, test_font, "Test Slider", 50,
 		sf::Color::White, sf::Color::Yellow, sf::Color::Red, sf::Color(200, 200, 200),
-		3.f, sf::Color::Black, sf::Color::White);*/
+		3.f, sf::Color::Black, sf::Color::White);
 }
 
 Workspace::Workspace()
@@ -43,6 +49,7 @@ Workspace::Workspace()
 
 	// Initialize the custom objects
 	initButtons();
+	initSwitchButtons();
 	initSliders();
 }
 
@@ -52,6 +59,7 @@ Workspace::~Workspace()
 
 	// Delete custom objects
 	for (auto const& it : buttons) { delete it.second; }
+	for (auto const& it : switchButtons) { delete it.second; }
 	for (auto const& it : sliders) { delete it.second; }
 }
 
@@ -85,12 +93,22 @@ void Workspace::update()
 
 	// Update custom objects and make sure that only one is pushed
 	bool pushed = false;
-	if (!pushed && !pushing_slider)
+	if (!pushed && !pushing_slider && !pushing_switchbutton)
 	{
 		for (auto const& it : buttons) 
 		{ 
 			it.second->update(mouse_pos_view);
 			if (it.second->getStatus() == ACTIVE) { pushed = true; break; }
+		}
+	}
+
+	if (!pushed && !pushing_slider)
+	{
+		for (auto const& it : switchButtons)
+		{
+			it.second->update(mouse_pos_view);
+			if (it.second->isPushed()) { pushed = true; pushing_switchbutton = true; break; }
+			else { pushing_switchbutton = false; }
 		}
 	}
 
@@ -111,6 +129,7 @@ void Workspace::render()
 
 	// Render custom objects
 	for (auto const& it : buttons) { it.second->render(window); }
+	for (auto const& it : switchButtons) { it.second->render(window); }
 	for (auto const& it : sliders) { it.second->render(window); }
 
 	window->display();

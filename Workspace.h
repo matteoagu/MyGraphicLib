@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Button.h"
+#include "SwitchButton.h"
 #include "Slider.h"
 
 #include <map>
@@ -21,7 +22,10 @@ private:
 
 	// Custom objects
 	std::map<std::string, agu::Button*> buttons;
+	std::map<std::string, agu::SwitchButton*> switchButtons;
 	std::map<std::string, agu::Slider*> sliders;
+
+	bool pushing_switchbutton;
 	bool pushing_slider;
 
 	void initVariables();
@@ -30,6 +34,7 @@ private:
 
 	// Initialize the custom objects
 	void initButtons();
+	void initSwitchButtons();
 	void initSliders();
 
 public:

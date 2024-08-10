@@ -8,7 +8,7 @@
 #include <string>
 
 enum ButtonStates { IDLE, HOOVER, ACTIVE };
-static sf::Clock mouseClock;
+static sf::Clock ButtonMouseClock;
 
 namespace agu
 {
