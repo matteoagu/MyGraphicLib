@@ -1,5 +1,7 @@
 #pragma once
 
+#include "states.hpp"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Network.hpp>
@@ -7,7 +9,6 @@
 
 #include <string>
 
-enum ButtonStates { IDLE, HOOVER, ACTIVE };
 static sf::Clock ButtonMouseClock;
 
 namespace agu
@@ -54,7 +55,10 @@ namespace agu
 		virtual ~Button();
 
 		// Get functions
-		short unsigned const getStatus() const;
+		short unsigned const getStatus();
+		sf::Vector2f const getPosition();
+
+		void setPosition(sf::Vector2f pos);
 
 		bool checkIfAlreadyActive();
 

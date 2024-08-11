@@ -3,6 +3,7 @@
 #include "Button.h"
 #include "SwitchButton.h"
 #include "Slider.h"
+#include "BoxSlider.h"
 
 #include <map>
 #include <iostream>
@@ -24,9 +25,11 @@ private:
 	std::map<std::string, agu::Button*> buttons;
 	std::map<std::string, agu::SwitchButton*> switchButtons;
 	std::map<std::string, agu::Slider*> sliders;
+	std::map<std::string, agu::BoxSlider*> boxSliders;
 
 	bool pushing_switchbutton;
 	bool pushing_slider;
+	bool pushing_box_slider;
 
 	void initVariables();
 	void initWindow();
@@ -36,6 +39,7 @@ private:
 	void initButtons();
 	void initSwitchButtons();
 	void initSliders();
+	void initBoxSliders();
 
 public:
 	Workspace();

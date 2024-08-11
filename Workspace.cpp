@@ -4,6 +4,7 @@ void Workspace::initVariables()
 {
 	pushing_slider = false;
 	pushing_switchbutton = false;
+	pushing_box_slider = false;
 }
 
 void Workspace::initWindow()
@@ -41,6 +42,12 @@ void Workspace::initSliders()
 		3.f, sf::Color::Black, sf::Color::White);
 }
 
+void Workspace::initBoxSliders()
+{
+	boxSliders["TEST"] = new agu::BoxSlider({ 600.f, 500.f }, test_font, "Phase", 40, 
+		sf::Color(150, 150, 150), sf::Color::White, sf::Color::White, 4.f, -30.f, 75.f, 0.05f, 3);
+}
+
 Workspace::Workspace()
 {
 	initVariables();
@@ -51,6 +58,7 @@ Workspace::Workspace()
 	initButtons();
 	initSwitchButtons();
 	initSliders();
+	initBoxSliders();
 }
 
 Workspace::~Workspace()
@@ -61,6 +69,7 @@ Workspace::~Workspace()
 	for (auto const& it : buttons) { delete it.second; }
 	for (auto const& it : switchButtons) { delete it.second; }
 	for (auto const& it : sliders) { delete it.second; }
+	for (auto const& it : boxSliders) { delete it.second; }
 }
 
 void Workspace::updatePollEvents()
@@ -93,7 +102,7 @@ void Workspace::update()
 
 	// Update custom objects and make sure that only one is pushed
 	bool pushed = false;
-	if (!pushed && !pushing_slider && !pushing_switchbutton)
+	if (!pushed && !pushing_slider && !pushing_switchbutton && !pushing_box_slider)
 	{
 		for (auto const& it : buttons) 
 		{ 
@@ -102,7 +111,7 @@ void Workspace::update()
 		}
 	}
 
-	if (!pushed && !pushing_slider)
+	if (!pushed && !pushing_slider && !pushing_box_slider)
 	{
 		for (auto const& it : switchButtons)
 		{
@@ -112,13 +121,23 @@ void Workspace::update()
 		}
 	}
 
-	if (!pushed)
+	if (!pushed && !pushing_box_slider)
 	{
 		for (auto const& it : sliders) 
 		{ 
 			it.second->update(mouse_pos_view); 
-			if (it.second->getStatus() == sACTIVE) { pushed = true; pushing_slider = true; break; }
+			if (it.second->getStatus() == ButtonStates::ACTIVE) { pushed = true; pushing_slider = true; break; }
 			else { pushing_slider = false; }
+		}
+	}
+
+	if (!pushed)
+	{
+		for (auto const& it : boxSliders)
+		{
+			it.second->update(mouse_pos_view);
+			if (it.second->getStatus() == ButtonStates::ACTIVE) { pushed = true; pushing_box_slider = true; break; }
+			else { pushing_box_slider = false; }
 		}
 	}
 }
@@ -131,6 +150,7 @@ void Workspace::render()
 	for (auto const& it : buttons) { it.second->render(window); }
 	for (auto const& it : switchButtons) { it.second->render(window); }
 	for (auto const& it : sliders) { it.second->render(window); }
+	for (auto const& it : boxSliders) { it.second->render(window); }
 
 	window->display();
 }

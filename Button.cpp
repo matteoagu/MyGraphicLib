@@ -63,9 +63,19 @@ agu::Button::~Button()
 {
 }
 
-short unsigned const agu::Button::getStatus() const
+short unsigned const agu::Button::getStatus()
 {
 	return status;
+}
+
+sf::Vector2f const agu::Button::getPosition()
+{
+	return position;
+}
+
+void agu::Button::setPosition(sf::Vector2f pos)
+{
+	position = pos;
 }
 
 bool agu::Button::checkIfAlreadyActive()

@@ -2,7 +2,7 @@
 
 void agu::SwitchButton::initVariables()
 {
-	status = OFF;
+	status = SwitchStates::OFF;
 }
 
 void agu::SwitchButton::initShapes()
@@ -52,7 +52,7 @@ void agu::SwitchButton::updateStatus(sf::Vector2f& mousePosView)
 
 void agu::SwitchButton::updateColors()
 {
-	if (status == ON)
+	if (status == SwitchStates::ON)
 	{
 		left_rect.setOutlineThickness(0.f);
 		right_rect.setOutlineThickness(5.f);
@@ -72,7 +72,7 @@ void agu::SwitchButton::update(sf::Vector2f& mousePosView)
 
 void agu::SwitchButton::render(sf::RenderTarget* target)
 {
-	if (status == OFF)
+	if (status == SwitchStates::OFF)
 	{
 		target->draw(right_rect);
 		target->draw(left_rect);

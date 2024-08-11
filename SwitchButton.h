@@ -1,5 +1,7 @@
 #pragma once
 
+#include "states.hpp"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Network.hpp>
@@ -7,7 +9,6 @@
 
 #include <string>
 
-enum SwitchStatus {ON, OFF};
 static sf::Clock SwitchButtonMouseClock;
 
 namespace agu

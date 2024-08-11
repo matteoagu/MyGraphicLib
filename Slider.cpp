@@ -19,7 +19,7 @@ void agu::Slider::initVariables(sf::Vector2f pos, std::string text, unsigned cha
 	text_color = textColor;
 	text_outline_color = textOutlineColor;
 
-	status = sIDLE;
+	status = ButtonStates::IDLE;
 
 	value = 50.f;
 	show_value = true;
@@ -68,7 +68,7 @@ agu::Slider::~Slider()
 
 bool agu::Slider::checkIfAlreadyActive()
 {
-	return (status == sACTIVE && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+	return (status == ButtonStates::ACTIVE && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
 }
 
 int const agu::Slider::getValue() const
@@ -88,7 +88,7 @@ void const agu::Slider::switchShowValue()
 
 void agu::Slider::updateStatus(sf::Vector2f& mousePosView)
 {
-	if (checkIfAlreadyActive()) { status = sACTIVE; }
+	if (checkIfAlreadyActive()) { status = ButtonStates::ACTIVE; }
 	else
 	{
 		float dx = mousePosView.x - circle_position.x;
@@ -97,11 +97,11 @@ void agu::Slider::updateStatus(sf::Vector2f& mousePosView)
 
 		if (d < circle.getRadius())
 		{
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) { status = sACTIVE; }
-			else { status = sHOOVER; }
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) { status = ButtonStates::ACTIVE; }
+			else { status = ButtonStates::HOOVER; }
 		}
 
-		else { status = sIDLE; }
+		else { status = ButtonStates::IDLE; }
 	}
 }
 
@@ -109,15 +109,15 @@ void agu::Slider::updateColors()
 {
 	switch (status)
 	{
-	case sIDLE:
+	case ButtonStates::IDLE:
 		circle.setFillColor(idle_color);
 		break;
 
-	case sHOOVER:
+	case ButtonStates::HOOVER:
 		circle.setFillColor(hoover_color);
 		break;
 
-	case sACTIVE:
+	case ButtonStates::ACTIVE:
 		circle.setFillColor(active_color);
 		break;
 
@@ -128,7 +128,7 @@ void agu::Slider::updateColors()
 
 void agu::Slider::updatePosition(sf::Vector2f& mousePosView)
 {
-	if (status == sACTIVE)
+	if (status == ButtonStates::ACTIVE)
 	{
 		float mx = mousePosView.x;
 		if (mx >= bar.getPosition().x + bar.getSize().x / 2.f) { circle_position.x = bar.getPosition().x + bar.getSize().x / 2.f; }

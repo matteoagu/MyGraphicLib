@@ -1,13 +1,13 @@
 #pragma once
 
+#include "states.hpp"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Network.hpp>
 #include <SFML/System.hpp>
 
 #include <string>
-
-enum SliderStates {sIDLE, sHOOVER, sACTIVE};
 
 namespace agu
 {
@@ -44,6 +44,7 @@ namespace agu
 			float textOutlineThickness, sf::Color textColor, sf::Color textOutlineColor);
 		void initText(sf::Font& font);
 		void initShapes();
+
 	public:
 		Slider(sf::Vector2f pos, sf::Font& font, std::string text, unsigned charSize,
 			sf::Color idleColor, sf::Color hooverColor, sf::Color activeColor, sf::Color barColor,
